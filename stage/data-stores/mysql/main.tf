@@ -5,4 +5,6 @@ resource "aws_db_instance" "sample" {
   name              = "example_database"
   username          = "admin"
   password          = "${var.db_password}"
+  snapshot_identifier = "some-snap"
+  skip_final_snapshot = true
 }
