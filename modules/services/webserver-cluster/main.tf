@@ -66,22 +66,25 @@ resource "aws_elb" "sample" {
 
 resource "aws_security_group" "elb" {
   name = "${var.cluster_name}-elb"
-
-  ingress {
-    from_port   = 80
-    to_port     = 80
-    protocol    = "tcp"
-    cidr_blocks = ["0.0.0.0/0"]
-  }
-
-  egress {
-    from_port   = 0
-    to_port     = 0
-    protocol    = "-1"
-    cidr_blocks = ["0.0.0.0/0"]
-  }
 }
 
+resource "aws_security_group_rule" "allow_http_inboud" {
+  type = "ingress"
+  security_group_id = "${aws_security_group.elb.id}"
+  from_port   = 80
+  to_port     = 80
+  protocol    = "tcp"
+  cidr_blocks = ["0.0.0.0/0"]
+}
+
+resource "aws_security_group_rule" "allow_all_outbound" {
+  type = "ingress"
+  security_group_id = "${aws_security_group.elb.id}"
+  from_port   = 80
+  to_port     = 80
+  protocol    = "-1"
+  cidr_blocks = ["0.0.0.0/0"]
+}
 data "terraform_remote_state" "db" {
   backend = "s3"
 
@@ -93,7 +96,7 @@ data "terraform_remote_state" "db" {
 }
 
 data "template_file" "user_data" {
-  template = "${file("../../../modules/services/webserver-cluster/files/user-data.sh")}"
+  template = "${file("${path.module}/files/user-data.sh")}"
 
   vars {
     server_port = "${var.server_port}"
