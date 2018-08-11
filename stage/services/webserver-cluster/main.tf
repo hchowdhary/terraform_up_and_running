@@ -1,5 +1,5 @@
 module "webserver_cluster" {
-  source = "git@github.com:hchowdhary/terraform_up_and_running.git//modules/services/webserver-cluster?ref=v0.0.2"
+  source = "git@github.com:hchowdhary/terraform_up_and_running.git//modules/services/webserver-cluster?ref=v0.0.1"
 
   cluster_name           = "webservers-stage"
   db_remote_state_bucket = "g24x7-himanshu-terraform-state"
